@@ -1,0 +1,27 @@
+---
+import MobileNav from '@/components/sections/MobileNav';
+---
+
+<header class="fixed flex justify-center w-full z-20 pt-2">
+  <div class="flex justify-between items-center px-10 z-0 py-5 text-white w-[95%] backdrop-blur-xl rounded-3xl bg-white/30">
+    <div class="font-mono tracking-tighter flex flex-col justify-center">
+      <h1 class="text-2xl font-medium">
+        <a href="/">SAMIUL A.</a>
+      </h1>
+      <p class="text-[10px] text-right">V_001</p>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <ul class="hidden lg:flex gap-5 items-center font-mono tracking-tighter text-xs font-medium">
+      <li class="nav-item">
+        <a href="#feed">Feed</a>
+      </li>
+      <li class="nav-item">
+        <a href="#contact">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Mobile Navigation -->
+    <MobileNav client:idle />
+  </div>
+</header>

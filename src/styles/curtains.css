@@ -1,0 +1,111 @@
+.curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 30;
+}
+
+.block-1 {
+  right: 95%;
+}
+.block-2 {
+  right: 90%;
+}
+.block-3 {
+  right: 85%;
+}
+.block-4 {
+  right: 80%;
+}
+.block-5 {
+  right: 75%;
+}
+.block-6 {
+  right: 70%;
+}
+.block-7 {
+  right: 65%;
+}
+.block-8 {
+  right: 60%;
+}
+.block-9 {
+  right: 55%;
+}
+.block-10 {
+  right: 50%;
+}
+.block-11 {
+  right: 45%;
+}
+.block-12 {
+  right: 40%;
+}
+.block-13 {
+  right: 35%;
+}
+.block-14 {
+  right: 30%;
+}
+.block-15 {
+  right: 25%;
+}
+.block-16 {
+  right: 20%;
+}
+.block-17 {
+  right: 15%;
+}
+.block-18 {
+  right: 10%;
+}
+.block-19 {
+  right: 5%;
+}
+.block-20 {
+  right: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .block-1 {
+    right: 90%;
+  }
+
+  .block-2 {
+    right: 80%;
+  }
+
+  .block-3 {
+    right: 70%;
+  }
+
+  .block-4 {
+    right: 60%;
+  }
+
+  .block-5 {
+    right: 50%;
+  }
+
+  .block-6 {
+    right: 40%;
+  }
+
+  .block-7 {
+    right: 30%;
+  }
+
+  .block-8 {
+    right: 20%;
+  }
+
+  .block-9 {
+    right: 10%;
+  }
+
+  .block-10 {
+    right: 0;
+  }
+}

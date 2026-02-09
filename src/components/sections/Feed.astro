@@ -1,0 +1,35 @@
+---
+import { Button } from '@/components/ui/button';
+import Type from '@/components/blocks/Type';
+import types from '@/constants/blogTypes';
+import topics from '@/constants/blogTopics';
+import feeds from '@/constants/feeds';
+import Post from '@/components/atoms/Post';
+---
+
+<section id="feed" class="min-h-screen w-full pb-20">
+  <div class="w-full px-6 lg:px-20 pt-36 pb-10">
+    <h2 class="text-xl lg:text-7xl font-mono tracking-tighter">Feed</h2>
+  </div>
+  <div class="w-full px-6 lg:px-20 flex gap-10">
+    <div class="w-1/4 h-full sticky top-[12vh] hidden lg:block">
+      <div class="flex justify-between items-center font-mono border-b">
+        <p>/ FILTER</p>
+        <button class="hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2 hover:rounded-none">
+          CLEAR FILTERS
+        </button>
+      </div>
+      <Type client:visible types={types} topics={topics} />
+    </div>
+    <div class="w-full lg:w-3/4 h-fit border-t lg:border-t-0">
+      <div class="w-full h-full hidden lg:flex border-b py-2 flex-1 px-1 text-xs lg:text-base font-mono">
+        <label class="w-1/6">/ DATE</label>
+        <label class="w-4/6">/ NAME</label>
+        <label class="w-1/6">/ TYPE</label>
+      </div>
+      {feeds.map((feed, index) => (
+        <Post client:visible feed={feed} />
+      ))}
+    </div>
+  </div>
+</section>

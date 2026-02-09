@@ -1,0 +1,22 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Curtains from '@/components/sections/Curtains';
+import Hero from '@/components/sections/Hero';
+import VerticalParallax from '@/components/sections/VerticalParallax';
+import ScrollSection from '@/components/ScrollSection';
+import Feed from '@/components/sections/Feed.astro';
+import LandingFooter from '@/components/sections/LandingFooter.astro';
+---
+
+<Layout>
+  <Curtains client:load />
+  <div class="container-body">
+    <div id="top-container" class="text-white">
+      <Hero client:only="react" />
+      <VerticalParallax client:visible />
+      <ScrollSection client:visible />
+      <Feed />
+      <LandingFooter />
+    </div>
+  </div>
+</Layout>

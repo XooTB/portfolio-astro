@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Local Fonts */
+@font-face {
+  font-family: 'Reross Quad';
+  src: url('/fonts/reross_quad.otf') format('opentype');
+  font-display: swap;
+}
+
+/* Font CSS Variables */
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+  --font-bebas-neue: 'Bebas Neue', sans-serif;
+  --font-reross: 'Reross Quad', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Inter', sans-serif;
+}
+
+/* Color Variables */
+:root {
+  --color-bg: #2b2b2b;
+}
+
+body {
+  background-color: var(--color-bg);
+}
+
+#canvas-container {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--color-bg);
+  z-index: 0;
+}
+
+#top-container {
+  position: absolute;
+  width: 100%;
+  z-index: 5;
+}
+
+.hero-canvas {
+  width: 100%;
+  height: 70vh;
+  background-color: var(--color-bg);
+}
+
+.container-body {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+}
+
+.hero-canvas-container {
+  width: 36%;
+  height: 70vh;
+}
+
+@media screen and (max-width: 1024px) {
+  .hero-canvas-container {
+    width: 100%;
+    height: 70vh;
+  }
+}
+
+.full-width-height-canvas {
+  width: 100%;
+  height: 100vh;
+}
+
+/* Vertical Parallax */
+.gallery {
+  height: 175vh;
+  flex-direction: row;
+  gap: 2vw;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 2vw;
+}
+
+.column {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  min-width: 250px;
+}
+
+.img-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 1vh;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  filter: grayscale(100%);
+}
+
+@media screen and (max-width: 1024px) {
+  .gallery {
+    height: 150vh;
+  }
+
+  .column {
+    min-width: 48%;
+  }
+}
+
+/* NavBar */
+.nav-item {
+  @apply transition-all duration-300 ease-in-out relative;
+  font-size: 14px;
+}
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: currentColor;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

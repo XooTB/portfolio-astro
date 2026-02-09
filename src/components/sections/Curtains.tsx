@@ -29,7 +29,8 @@ const Curtains = () => {
 
   return (
     <motion.div
-      className={`curtain relative` + (device === undefined ? "bg-white" : "")}
+      className="curtain relative"
+      style={{ backgroundColor: device ? 'transparent' : undefined }}
       initial={{ opacity: 1, y: 0 }}
       animate={{ opacity: 0, y: "-100%" }}
       transition={{ duration: 0.5, delay: BASE_DELAY + 1.8, ease: easeInOut }}

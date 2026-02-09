@@ -1,0 +1,54 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  author: string;
+  topics: string[];
+}
+
+const { title, description, date, author, topics } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Layout title={`${title} — Samiul A.`} description={description}>
+  <article class="min-h-screen w-full pt-36 pb-20 px-6 lg:px-20">
+    <div class="max-w-3xl mx-auto">
+      <a
+        href="/blog"
+        class="font-mono tracking-tighter text-xs text-neutral-400 hover:text-white transition-colors"
+      >
+        &larr; Back to blog
+      </a>
+
+      <header class="mt-8 mb-12 border-b border-neutral-700 pb-8">
+        <p class="font-mono text-xs text-neutral-400 mb-3">{formattedDate}</p>
+        <h1 class="font-mono tracking-tighter text-4xl lg:text-6xl font-medium mb-4">{title}</h1>
+        <p class="font-mono text-neutral-400 text-sm lg:text-base mb-4">{description}</p>
+        <div class="flex items-center gap-4 font-mono text-xs">
+          <span class="text-neutral-400">By {author}</span>
+          {topics.length > 0 && (
+            <div class="flex gap-2">
+              {topics.map((topic) => (
+                <span class="border px-2 py-1 rounded-sm border-dotted text-[10px] uppercase">
+                  {topic}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
+
+      <div class="prose prose-invert prose-neutral max-w-none prose-headings:font-mono prose-headings:tracking-tighter prose-code:text-sm prose-pre:bg-neutral-900 prose-pre:border prose-pre:border-neutral-700">
+        <slot />
+      </div>
+    </div>
+  </article>
+</Layout>

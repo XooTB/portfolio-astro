@@ -29,13 +29,19 @@ const MobileNav = () => {
                 className="transition-all duration-300 hover:translate-x-2"
                 onClick={() => setIsOpen(false)}
               >
-                <a href="#feed">Feed</a>
+                <a href="/blog">Blog</a>
               </li>
               <li
                 className="transition-all duration-300 hover:translate-x-2"
                 onClick={() => setIsOpen(false)}
               >
-                <a href="#contact">Contact</a>
+                <a href="/#feed">Feed</a>
+              </li>
+              <li
+                className="transition-all duration-300 hover:translate-x-2"
+                onClick={() => setIsOpen(false)}
+              >
+                <a href="/#contact">Contact</a>
               </li>
             </ul>
           </nav>

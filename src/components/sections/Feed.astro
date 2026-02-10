@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import Type from '@/components/blocks/Type';
+import Type from '@/components/blocks/Type.astro';
 import types from '@/constants/blogTypes';
 import topics from '@/constants/blogTopics';
 import Post from '@/components/atoms/Post.astro';
@@ -25,7 +25,7 @@ const feedPosts = posts.slice(0, 10);
           CLEAR FILTERS
         </button>
       </div>
-      <Type client:visible types={types} topics={topics} />
+      <Type types={types} topics={topics} />
     </div>
     <div class="w-full lg:w-3/4 h-fit border-t lg:border-t-0">
       <div class="w-full h-full hidden lg:flex border-b py-2 flex-1 px-1 text-xs lg:text-base font-mono">

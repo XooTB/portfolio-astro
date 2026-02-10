@@ -1,0 +1,16 @@
+---
+---
+
+<button
+  id="back-to-top"
+  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-10 px-4 py-2 hover:bg-transparent hover:text-indigo-400"
+>
+  Back to top
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none shrink-0"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+</button>
+
+<script>
+  document.getElementById('back-to-top')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>

@@ -1,0 +1,49 @@
+---
+const title = "SAMIUL ALIM";
+const chars = title.split("");
+---
+
+<div class="footer-title w-full flex justify-center items-center text-[22vw] font-bold font-bebas">
+  {chars.map((char, index) => (
+    <span
+      class="footer-char"
+      style={`animation-delay: ${index * 0.1}s`}
+    >
+      {char === " " ? "\u00A0" : char}
+    </span>
+  ))}
+</div>
+
+<style>
+  .footer-char {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .footer-title.in-view .footer-char {
+    animation: footer-reveal 0.4s ease forwards;
+  }
+
+  @keyframes footer-reveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  const el = document.querySelector('.footer-title');
+  if (el) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('in-view');
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+  }
+</script>

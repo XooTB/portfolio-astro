@@ -30,12 +30,12 @@ const formattedDate = date.toLocaleDateString('en-US', {
 
       <header class="mt-8 mb-12 border-b border-neutral-700 pb-8">
         <p class="font-mono text-xs text-neutral-400 mb-3">{formattedDate}</p>
-        <h1 class="font-mono tracking-tighter text-4xl lg:text-6xl font-medium mb-4">{title}</h1>
-        <p class="font-mono text-neutral-400 text-sm lg:text-base mb-4">{description}</p>
+        <h1 class="font-mono text-white tracking-tighter text-4xl lg:text-6xl font-medium mb-4">{title}</h1>
+        <p class="font-mono text-neutral-200 text-sm lg:text-base mb-4">{description}</p>
         <div class="flex items-center gap-4 font-mono text-xs">
-          <span class="text-neutral-400">By {author}</span>
+          <span class="text-neutral-200">By <span class="text-white font-bold">{author}</span></span>
           {topics.length > 0 && (
-            <div class="flex gap-2">
+            <div class="flex gap-2 text-white font-semibold">
               {topics.map((topic) => (
                 <span class="border px-2 py-1 rounded-sm border-dotted text-[10px] uppercase">
                   {topic}

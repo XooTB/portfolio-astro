@@ -41,6 +41,6 @@ function greet(name: string): string {
 
 ## What's next
 
-More posts, more projects. Stay tuned.
+More posts, more projects. Stay tuned. There's a lot that needs to be added for this blog thing to work.
 
 > "The best way to learn is to build something and then write about it."

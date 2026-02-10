@@ -13,11 +13,11 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 <Layout title="Blog — Samiul A." description="Blog posts by Samiul Alim">
   <section class="min-h-screen w-full pb-20">
     <div class="w-full px-6 lg:px-20 pt-36 pb-10">
-      <h2 class="text-xl lg:text-7xl font-mono tracking-tighter">Blog</h2>
+      <h2 class="text-xl text-white lg:text-7xl font-mono font-semibold tracking-tighter">Blog</h2>
     </div>
     <div class="w-full px-6 lg:px-20">
       <div class="w-full">
-        <div class="w-full hidden lg:flex border-b py-2 px-1 text-xs lg:text-base font-mono">
+        <div class="w-full hidden lg:flex border-b py-2 px-1 text-xs lg:text-base font-mono text-white">
           <span class="w-1/6">/ DATE</span>
           <span class="w-4/6">/ TITLE</span>
           <span class="w-1/6">/ TOPICS</span>
@@ -35,7 +35,7 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
           return (
             <a
               href={`/blog/${slug}`}
-              class="w-full flex flex-col lg:flex-row items-start lg:items-center font-mono h-auto lg:h-14 border-b hover:bg-white/5 transition-colors px-1"
+              class="w-full text-white flex flex-col lg:flex-row items-start lg:items-center font-mono h-auto lg:h-14 border-b hover:bg-white/5 transition-colors px-1"
             >
               <p class="w-3/12 lg:w-1/6 flex items-center gap-1 font-extralight text-[10px] lg:text-xs pt-2 lg:pt-0">
                 <Square size={8} className="fill-white" /> {formattedDate}

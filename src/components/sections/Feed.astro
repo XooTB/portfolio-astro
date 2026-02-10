@@ -1,9 +1,16 @@
 ---
+import { getCollection } from 'astro:content';
 import Type from '@/components/blocks/Type';
 import types from '@/constants/blogTypes';
 import topics from '@/constants/blogTopics';
-import feeds from '@/constants/feeds';
 import Post from '@/components/atoms/Post.astro';
+
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const feedPosts = posts.slice(0, 10);
 ---
 
 <section id="feed" class="min-h-screen w-full pb-20">
@@ -23,12 +30,23 @@ import Post from '@/components/atoms/Post.astro';
     <div class="w-full lg:w-3/4 h-fit border-t lg:border-t-0">
       <div class="w-full h-full hidden lg:flex border-b py-2 flex-1 px-1 text-xs lg:text-base font-mono">
         <label class="w-1/6">/ DATE</label>
-        <label class="w-4/6">/ NAME</label>
-        <label class="w-1/6">/ TYPE</label>
+        <label class="w-5/6">/ NAME</label>
       </div>
-      {feeds.map((feed, index) => (
-        <Post feed={feed} />
-      ))}
+      {feedPosts.map((post) => {
+        const slug = post.id.replace(/\/index$/, '');
+        return (
+          <Post
+            feed={{
+              date: post.data.date.toISOString().slice(0, 10),
+              author: post.data.author,
+              title: post.data.title,
+              topics: post.data.topics,
+              summary: post.data.description,
+              slug: slug,
+            }}
+          />
+        );
+      })}
     </div>
   </div>
 </section>

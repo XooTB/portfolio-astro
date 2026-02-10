@@ -1,0 +1,96 @@
+---
+---
+
+<!-- Trigger button (stays inside the navbar) -->
+<div class="lg:hidden">
+  <button id="mobile-nav-trigger" class="p-2" aria-label="Open menu">
+    <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    <svg id="close-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  </button>
+</div>
+
+<!-- Overlay + panel rendered outside the navbar's stacking context -->
+<div id="mobile-nav-overlay" hidden class="fixed inset-0 z-50 bg-black/80 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+<div id="mobile-nav-panel" hidden class="fixed inset-y-0 right-0 z-50 h-full w-3/4 sm:max-w-sm bg-background p-6 shadow-lg translate-x-full transition-transform duration-300 ease-in-out border-l">
+  <button id="mobile-nav-close" class="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" aria-label="Close menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    <span class="sr-only">Close</span>
+  </button>
+
+  <div class="flex flex-col space-y-2 text-left">
+    <div class="font-mono tracking-tighter mb-8 flex flex-col items-start">
+      <h2 class="text-2xl font-medium">SAMIUL A.</h2>
+      <p class="text-[10px] text-right">V_001</p>
+    </div>
+  </div>
+
+  <nav class="flex flex-col gap-6">
+    <ul class="flex flex-col gap-6 font-mono tracking-tighter text-lg">
+      <li class="transition-all duration-300 hover:translate-x-2">
+        <a href="/blog" class="mobile-nav-link">Blog</a>
+      </li>
+      <li class="transition-all duration-300 hover:translate-x-2">
+        <a href="/#feed" class="mobile-nav-link">Feed</a>
+      </li>
+      <li class="transition-all duration-300 hover:translate-x-2">
+        <a href="/#contact" class="mobile-nav-link">Contact</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<script>
+  const trigger = document.getElementById('mobile-nav-trigger');
+  const overlay = document.getElementById('mobile-nav-overlay');
+  const panel = document.getElementById('mobile-nav-panel');
+  const closeBtn = document.getElementById('mobile-nav-close');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+  const links = document.querySelectorAll('.mobile-nav-link');
+
+  // Move overlay and panel to document.body so they escape
+  // the navbar's backdrop-blur stacking context
+  if (overlay) document.body.appendChild(overlay);
+  if (panel) document.body.appendChild(panel);
+
+  function open() {
+    overlay?.removeAttribute('hidden');
+    panel?.removeAttribute('hidden');
+    // Force reflow so the transition plays from the initial state
+    panel?.offsetHeight;
+    panel?.classList.remove('translate-x-full');
+    panel?.classList.add('translate-x-0');
+    overlay?.classList.remove('opacity-0', 'pointer-events-none');
+    overlay?.classList.add('opacity-100');
+    menuIcon?.classList.add('hidden');
+    closeIcon?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    panel?.classList.add('translate-x-full');
+    panel?.classList.remove('translate-x-0');
+    overlay?.classList.add('opacity-0', 'pointer-events-none');
+    overlay?.classList.remove('opacity-100');
+    menuIcon?.classList.remove('hidden');
+    closeIcon?.classList.add('hidden');
+    document.body.style.overflow = '';
+    // Re-hide after transition completes
+    panel?.addEventListener('transitionend', () => {
+      if (panel.classList.contains('translate-x-full')) {
+        panel.setAttribute('hidden', '');
+        overlay?.setAttribute('hidden', '');
+      }
+    }, { once: true });
+  }
+
+  trigger?.addEventListener('click', () => {
+    const isOpen = panel?.classList.contains('translate-x-0');
+    isOpen ? close() : open();
+  });
+
+  closeBtn?.addEventListener('click', close);
+  overlay?.addEventListener('click', close);
+  links.forEach(link => link.addEventListener('click', close));
+</script>

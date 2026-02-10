@@ -1,0 +1,59 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { Square } from 'lucide-react';
+
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout title="Blog — Samiul A." description="Blog posts by Samiul Alim">
+  <section class="min-h-screen w-full pb-20">
+    <div class="w-full px-6 lg:px-20 pt-36 pb-10">
+      <h2 class="text-xl text-white lg:text-7xl font-mono font-semibold tracking-tighter">Blog</h2>
+    </div>
+    <div class="w-full px-6 lg:px-20">
+      <div class="w-full">
+        <div class="w-full hidden lg:flex border-b py-2 px-1 text-xs lg:text-base font-mono text-white">
+          <span class="w-1/6">/ DATE</span>
+          <span class="w-4/6">/ TITLE</span>
+          <span class="w-1/6">/ TOPICS</span>
+        </div>
+        {posts.length === 0 && (
+          <p class="font-mono text-neutral-400 py-8 text-center">No posts yet.</p>
+        )}
+        {posts.map((post) => {
+          const slug = post.id.replace(/\/index$/, '');
+          const formattedDate = post.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
+          return (
+            <a
+              href={`/blog/${slug}`}
+              class="w-full text-white flex flex-col lg:flex-row items-start lg:items-center font-mono h-auto lg:h-14 border-b hover:bg-white/5 transition-colors px-1"
+            >
+              <p class="w-3/12 lg:w-1/6 flex items-center gap-1 font-extralight text-[10px] lg:text-xs pt-2 lg:pt-0">
+                <Square size={8} className="fill-white" /> {formattedDate}
+              </p>
+              <p class="w-full lg:w-4/6 text-lg lg:text-3xl line-clamp-1 tracking-tighter pb-2 lg:pb-0">
+                {post.data.title}
+              </p>
+              <div class="hidden lg:flex w-1/6 gap-2">
+                {post.data.topics.map((topic) => (
+                  <span class="border px-2 py-1 rounded-sm text-[9px] border-dotted uppercase">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Layout>

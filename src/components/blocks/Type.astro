@@ -1,0 +1,137 @@
+---
+import Folder from '@lucide/astro/icons/folder';
+import ChevronDown from '@lucide/astro/icons/chevron-down';
+import Check from '@lucide/astro/icons/check';
+
+interface Props {
+  types: { name: string; filter: string }[];
+  topics: { name: string; filter: string }[];
+}
+
+const { types, topics } = Astro.props;
+---
+
+<div class="w-full flex gap-10 font-mono">
+  <!-- Type accordion -->
+  <div data-filter-accordion data-expanded class="w-1/2">
+    <button data-filter-toggle class="flex flex-1 w-full items-center justify-between py-4 font-medium transition-all hover:underline">
+      <div class="flex items-center gap-3 text-xs">
+        <Folder size={18} /> Type
+      </div>
+      <ChevronDown class="filter-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+    </button>
+    <div class="filter-body">
+      <div class="filter-body-inner">
+        <div class="border-l border-dotted px-5 pb-4">
+          {types.map((type) => (
+            <label class="flex items-center gap-2 pb-1 cursor-pointer">
+              <span class="filter-checkbox">
+                <Check class="filter-check h-4 w-4" />
+              </span>
+              <p class="text-sm">{type.name}</p>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic accordion -->
+  <div data-filter-accordion data-expanded class="w-1/2">
+    <button data-filter-toggle class="flex flex-1 w-full items-center justify-between py-4 font-medium transition-all hover:underline">
+      <div class="flex items-center gap-3 text-xs">
+        <Folder size={18} /> Topic
+      </div>
+      <ChevronDown class="filter-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+    </button>
+    <div class="filter-body">
+      <div class="filter-body-inner">
+        <div class="border-l border-dotted px-5 pb-4">
+          {topics.map((topic) => (
+            <label class="flex items-center gap-2 pb-1 cursor-pointer">
+              <span class="filter-checkbox">
+                <Check class="filter-check h-4 w-4" />
+              </span>
+              <p class="text-sm">{topic.name}</p>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Accordion body: collapsed/expanded via grid-template-rows */
+  .filter-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+  }
+
+  .filter-body-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  [data-filter-accordion][data-expanded] .filter-body {
+    grid-template-rows: 1fr;
+  }
+
+  /* Chevron rotation */
+  .filter-chevron {
+    transition: transform 0.2s ease;
+  }
+
+  [data-filter-accordion][data-expanded] .filter-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Custom checkbox */
+  .filter-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1rem;
+    width: 1rem;
+    flex-shrink: 0;
+    border-radius: 0.125rem;
+    border: 1px solid hsl(var(--primary));
+  }
+
+  .filter-check {
+    display: none;
+  }
+
+  .filter-checkbox.checked {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .filter-checkbox.checked .filter-check {
+    display: flex;
+  }
+</style>
+
+<script>
+  // Accordion toggle
+  document.addEventListener("click", (e) => {
+    const toggle = (e.target as HTMLElement).closest("[data-filter-toggle]");
+    if (!toggle) return;
+    const accordion = toggle.closest("[data-filter-accordion]");
+    if (!accordion) return;
+    if (accordion.hasAttribute("data-expanded")) {
+      accordion.removeAttribute("data-expanded");
+    } else {
+      accordion.setAttribute("data-expanded", "");
+    }
+  });
+
+  // Checkbox toggle
+  document.querySelectorAll(".filter-checkbox").forEach((box) => {
+    box.addEventListener("click", (e) => {
+      e.preventDefault();
+      box.classList.toggle("checked");
+    });
+  });
+</script>

@@ -1,6 +1,13 @@
 ---
 import NavBar from '@/components/NavBar.astro';
 import '@/styles/globals.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'Samiul A.', description = 'Creative Designer' } = Astro.props;
 ---
 
 <!doctype html>
@@ -8,8 +15,8 @@ import '@/styles/globals.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Samiul A.</title>
-    <meta name="description" content="Creative Designer" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

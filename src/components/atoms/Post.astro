@@ -1,0 +1,126 @@
+---
+import Square from '@lucide/astro/icons/square';
+import Plus from '@lucide/astro/icons/plus';
+import Minus from '@lucide/astro/icons/minus';
+
+interface Props {
+  feed: {
+    date: string;
+    author: string;
+    title: string;
+    topics: string[];
+    summary: string;
+    slug: string;
+  };
+}
+
+const { feed } = Astro.props;
+---
+
+<div data-post class="border-b overflow-clip">
+  <div
+    data-post-toggle
+    class="w-full flex flex-col lg:flex-row items-start flex-1 lg:items-center justify-start font-mono h-14 hover:cursor-pointer"
+  >
+    <p class="w-3/12 lg:w-1/6 flex items-center gap-1 font-extralight text-[10px] lg:text-xs pt-2">
+      <Square size={8} fill="white" />
+      {feed.date}
+    </p>
+    <div class="flex w-full lg:w-5/6 items-center justify-between">
+      <p class="w-11/12 lg:w-full text-lg lg:text-3xl line-clamp-1">
+        {feed.title}
+      </p>
+      <p class="hover:cursor-pointer hover:bg-white hover:text-black hover:rounded-md transition-all">
+        <Plus class="post-icon-plus" size={18} />
+        <Minus class="post-icon-minus" size={18} />
+      </p>
+    </div>
+  </div>
+  <div class="post-body">
+    <div class="post-body-inner">
+      <div class="w-full border-b py-4 flex flex-col gap-5 flex-1 px-1 text-base font-mono">
+      <div class="w-full flex flex-col lg:flex-row items-start">
+        <div class="w-full lg:w-5/6 flex items-start lg:items-center">
+          <label class="uppercase w-1/6 font-thin text-xs lg:text-base">
+            Summary:
+          </label>
+          <p class="w-full lg:w-4/6 text-xs lg:text-lg line-clamp-2 lg:line-clamp-3 pl-3 lg:pl-8">
+            {feed.summary}
+          </p>
+        </div>
+        <div class="w-full lg:w-1/6 flex items-start lg:items-center pt-2 lg:pt-0">
+          <label class="w-1/6 lg:w-auto uppercase font-thin text-xs lg:text-sm">
+            Author:
+          </label>
+          <p class="w-full lg:w-auto text-xs lg:text-lg pl-3">
+            {feed.author}
+          </p>
+        </div>
+      </div>
+      <div class="w-full flex flex-1 uppercase items-center">
+        <label class="w-1/6 font-thin text-xs lg:text-sm">Topics:</label>
+        <p class="flex gap-2 pl-3 lg:pl-0">
+          {feed.topics.map((topic) => (
+            <span class="border px-1 py-[2px] lg:px-2 lg:py-1 rounded-sm text-[10px] lg:text-xs border-dotted hover:bg-white hover:text-black hover:cursor-pointer">
+              {topic}
+            </span>
+          ))}
+        </p>
+      </div>
+      <a href={`/blog/${feed.slug}`} class="hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-10 px-4 py-2 border">
+        Read More
+      </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Collapsed state (default) */
+  .post-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+  }
+
+  .post-body-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* Expanded state */
+  [data-post][data-expanded] .post-body {
+    grid-template-rows: 1fr;
+  }
+
+  /* Icon visibility */
+  [data-post] .post-icon-minus {
+    display: none;
+  }
+
+  [data-post] .post-icon-plus {
+    display: block;
+  }
+
+  [data-post][data-expanded] .post-icon-minus {
+    display: block;
+  }
+
+  [data-post][data-expanded] .post-icon-plus {
+    display: none;
+  }
+</style>
+
+<script>
+  document.addEventListener("click", (e) => {
+    const toggle = (e.target as HTMLElement).closest("[data-post-toggle]");
+    if (!toggle) return;
+    const post = toggle.closest("[data-post]");
+    if (!post) return;
+    if (post.hasAttribute("data-expanded")) {
+      post.removeAttribute("data-expanded");
+    } else {
+      post.setAttribute("data-expanded", "");
+    }
+  });
+</script>

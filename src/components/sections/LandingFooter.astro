@@ -1,6 +1,6 @@
 ---
-import FooterTitle from '@/components/blocks/FooterTitle';
-import BackToTopButton from '@/components/atoms/BackToTopButton';
+import FooterTitle from '@/components/blocks/FooterTitle.astro';
+import BackToTopButton from '@/components/atoms/BackToTopButton.astro';
 ---
 
 <section id="contact" class="w-full pb-10 lg:pb-0 lg:min-h-screen px-4 sm:px-8 md:px-20 bg-black">
@@ -24,7 +24,7 @@ import BackToTopButton from '@/components/atoms/BackToTopButton';
       </a>
     </p>
   </div>
-  <FooterTitle client:visible />
+  <FooterTitle />
   <div class="w-full flex flex-col sm:flex-row items-center gap-4 sm:gap-0 sm:justify-between uppercase font-mono pb-5 text-sm sm:text-base">
     <p class="flex items-center gap-2">
       <!-- Copyright icon inline SVG -->
@@ -37,7 +37,7 @@ import BackToTopButton from '@/components/atoms/BackToTopButton';
       Dhaka, Bangladesh
     </p>
     <p class="flex items-center gap-2 hover:text-indigo-300 hover:cursor-pointer hover:font-bold">
-      <BackToTopButton client:visible />
+      <BackToTopButton />
     </p>
   </div>
 </section>

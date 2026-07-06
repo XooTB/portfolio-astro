@@ -2,6 +2,7 @@
 import Layout from './Layout.astro';
 
 interface Props {
+  slug: string;
   title: string;
   description: string;
   date: Date;
@@ -9,16 +10,30 @@ interface Props {
   topics: string[];
 }
 
-const { title, description, date, author, topics } = Astro.props;
+const { slug, title, description, date, author, topics } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+
+const pageTitle = `${title} — Samiul A.`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(`/og/blog/${slug}.png`, Astro.site).href;
+
+const openGraph = {
+  title: pageTitle,
+  description,
+  image: ogImageUrl,
+  url: canonicalUrl,
+  type: 'article' as const,
+  publishedTime: date.toISOString(),
+  author,
+};
 ---
 
-<Layout title={`${title} — Samiul A.`} description={description}>
+<Layout title={pageTitle} description={description} openGraph={openGraph}>
   <article class="min-h-screen w-full pt-36 pb-20 px-6 lg:px-20">
     <div class="max-w-3xl mx-auto">
       <a

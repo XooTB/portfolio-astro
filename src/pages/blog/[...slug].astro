@@ -18,9 +18,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const slug = Astro.params.slug!;
 ---
 
 <BlogPost
+  slug={slug}
   title={post.data.title}
   description={post.data.description}
   date={post.data.date}

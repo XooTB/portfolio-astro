@@ -1,6 +1,8 @@
 ---
 title: "Why your TRON USDT transfer silently failed"
 description: "TRON splits fees into two independent resources: bandwidth and energy. A transfer can clear one and run out of the other mid-execution — here's what that looks like and how to avoid it."
+ogTitle: "Your TRON USDT transfer failed silently"
+ogDescription: "Bandwidth and energy are separate. Running out of one mid-transfer can fail your send without a clear error."
 date: 2026-07-05
 author: Samiul
 topics: [TRON, USDT, TRC-20, Fees]

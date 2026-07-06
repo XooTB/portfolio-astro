@@ -2,23 +2,42 @@
 import Layout from './Layout.astro';
 
 interface Props {
+  slug: string;
   title: string;
   description: string;
+  ogTitle?: string;
+  ogDescription?: string;
   date: Date;
   author: string;
   topics: string[];
 }
 
-const { title, description, date, author, topics } = Astro.props;
+const { slug, title, description, ogTitle, ogDescription, date, author, topics } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+
+const pageTitle = `${title} — Samiul A.`;
+const socialTitle = `${ogTitle ?? title} — Samiul A.`;
+const socialDescription = ogDescription ?? description;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(`/og/blog/${slug}.png`, Astro.site).href;
+
+const openGraph = {
+  title: socialTitle,
+  description: socialDescription,
+  image: ogImageUrl,
+  url: canonicalUrl,
+  type: 'article' as const,
+  publishedTime: date.toISOString(),
+  author,
+};
 ---
 
-<Layout title={`${title} — Samiul A.`} description={description}>
+<Layout title={pageTitle} description={description} openGraph={openGraph}>
   <article class="min-h-screen w-full pt-36 pb-20 px-6 lg:px-20">
     <div class="max-w-3xl mx-auto">
       <a
@@ -33,7 +52,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
         <h1 class="font-mono text-white tracking-tighter text-4xl lg:text-6xl font-medium mb-4">{title}</h1>
         <p class="font-mono text-neutral-200 text-sm lg:text-base mb-4">{description}</p>
         <div class="flex items-center gap-4 font-mono text-xs">
-          <span class="text-neutral-200">By <span class="text-white font-bold">{author}</span></span>
+          <span class="text-neutral-200">by <span class="text-white font-bold">{author}</span></span>
           {topics.length > 0 && (
             <div class="flex gap-2 text-white font-semibold">
               {topics.map((topic) => (

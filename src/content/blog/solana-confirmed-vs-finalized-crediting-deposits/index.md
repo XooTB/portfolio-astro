@@ -6,7 +6,7 @@ ogDescription: "'Confirmed' has never been rolled back on mainnet, yet we still 
 date: 2026-07-13
 author: Samiul
 topics: [Solana, Commitment, Finality, Payments, TowerBFT]
-draft: true
+draft: false
 ---
 
 When a user sends SOL to a deposit address, their wallet reports success almost immediately, and an explorer shows the transaction a second or two later. If you're handling payments like we were, that's exactly the moment you have to resist crediting anything.

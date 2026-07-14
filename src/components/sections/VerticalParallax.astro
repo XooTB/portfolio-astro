@@ -1,0 +1,75 @@
+---
+const images = [
+  "1.jpg",
+  "2.jpg",
+  "3.jpg",
+  "4.jpg",
+  "5.jpg",
+  "6.jpg",
+  "7.jpg",
+  "8.jpg",
+  "9.jpg",
+  "10.jpg",
+  "11.jpg",
+  "12.jpg",
+];
+
+const desktopColumns = [
+  { images: images.slice(0, 3), range: 1000 },
+  { images: images.slice(3, 6), range: 700 },
+  { images: images.slice(6, 9), range: 1100 },
+  { images: images.slice(9, 12), range: 900 },
+];
+
+const mobileColumns = [
+  { images: images.slice(0, 3), range: 400 },
+  { images: images.slice(3, 6), range: 250 },
+];
+---
+
+<section class="min-h-[100px]"></section>
+
+<section data-parallax-gallery class="gallery hidden lg:flex">
+  {desktopColumns.map((col) => (
+    <div class="column" data-parallax-col data-range={col.range} style="will-change: transform">
+      {col.images.map((image, index) => (
+        <div class="img-container">
+          <img
+            src={`/assets/images/parallax/${image}`}
+            alt={`Parallax gallery image ${index + 1}`}
+            class="image"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      ))}
+    </div>
+  ))}
+</section>
+
+<section
+  data-parallax-gallery
+  class="flex flex-row gap-2 box-border overflow-hidden p-2 lg:hidden h-[100vh]"
+>
+  {mobileColumns.map((col) => (
+    <div class="column" data-parallax-col data-range={col.range} style="will-change: transform">
+      {col.images.map((image, index) => (
+        <div class="img-container">
+          <img
+            src={`/assets/images/parallax/${image}`}
+            alt={`Parallax gallery image ${index + 1}`}
+            class="image"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      ))}
+    </div>
+  ))}
+</section>
+
+<script>
+  import { initVerticalParallax } from "@/scripts/vertical-parallax";
+
+  initVerticalParallax();
+</script>

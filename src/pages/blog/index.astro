@@ -1,7 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { Square } from 'lucide-react';
+import Square from '@lucide/astro/icons/square';
 
 const posts = await getCollection('blog', ({ data }) => {
   return import.meta.env.PROD ? !data.draft : true;
@@ -38,7 +38,7 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
               class="w-full text-white flex flex-col lg:flex-row items-start lg:items-center font-mono h-auto lg:h-14 border-b hover:bg-white/5 transition-colors px-1"
             >
               <p class="w-3/12 lg:w-1/6 flex items-center gap-1 font-extralight text-[10px] lg:text-xs pt-2 lg:pt-0">
-                <Square size={8} className="fill-white" /> {formattedDate}
+                <Square size={8} fill="white" /> {formattedDate}
               </p>
               <p class="w-full lg:w-4/6 text-lg lg:text-3xl line-clamp-1 tracking-tighter pb-2 lg:pb-0">
                 {post.data.title}

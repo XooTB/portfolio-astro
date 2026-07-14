@@ -1,0 +1,94 @@
+---
+const name = "Samiul";
+const tagline = "And I do stuff for fun...";
+const greeting = "Hey! I'm";
+
+const zoopChars = (text: string) => text.split("");
+---
+
+<div class="w-full min-h-screen flex flex-col-reverse lg:flex-row justify-center items-center text-3xl font-semibold px-5 pt-22 lg:px-20 z-10">
+  <div class="w-full md:w-1/2 flex flex-col gap-4">
+    <div
+      class="scrambler flex flex-wrap font-mono text-xl lg:text-3xl"
+      data-scrambler
+      data-text={greeting}
+      data-duration="9"
+    ></div>
+
+    <a
+      class="zoop relative block overflow-hidden whitespace-nowrap uppercase hover:cursor-pointer font-mono text-5xl lg:text-8xl"
+      style="line-height: 1"
+      data-zoop
+    >
+      <div class="zoop-line zoop-line--top">
+        {zoopChars(name).map((char, i) => (
+          <span class="inline-block" style={`--i: ${i}`}>{char === " " ? "\u00A0" : char}</span>
+        ))}
+      </div>
+      <div class="zoop-line zoop-line--bottom absolute inset-0">
+        {zoopChars(name).map((char, i) => (
+          <span class="inline-block" style={`--i: ${i}`}>{char === " " ? "\u00A0" : char}</span>
+        ))}
+      </div>
+    </a>
+
+    <a
+      class="zoop relative block overflow-hidden whitespace-nowrap uppercase hover:cursor-pointer font-mono text-xl lg:text-2xl"
+      style="line-height: 1"
+      data-zoop
+    >
+      <div class="zoop-line zoop-line--top">
+        {zoopChars(tagline).map((char, i) => (
+          <span class="inline-block" style={`--i: ${i}`}>{char === " " ? "\u00A0" : char}</span>
+        ))}
+      </div>
+      <div class="zoop-line zoop-line--bottom absolute inset-0">
+        {zoopChars(tagline).map((char, i) => (
+          <span class="inline-block" style={`--i: ${i}`}>{char === " " ? "\u00A0" : char}</span>
+        ))}
+      </div>
+    </a>
+  </div>
+
+  <div class="hero-canvas-container">
+    <div class="hero-canvas" data-hero-canvas data-src="/assets/images/cat_portrait.png"></div>
+  </div>
+</div>
+
+<style>
+  .zoop-line--top span,
+  .zoop-line--bottom span {
+    transition: transform 0.25s ease-in-out;
+    transition-delay: calc(var(--i) * 0.025s);
+  }
+
+  .zoop-line--bottom span {
+    transform: translateY(100%);
+  }
+
+  .zoop:hover .zoop-line--top span {
+    transform: translateY(-100%);
+  }
+
+  .zoop:hover .zoop-line--bottom span {
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  import { initScrambler } from "@/scripts/scrambler";
+  import { createImageAberration } from "@/components/three/imageAberration";
+
+  document.querySelectorAll<HTMLElement>("[data-scrambler]").forEach((el) => {
+    const text = el.dataset.text ?? "";
+    const duration = Number(el.dataset.duration ?? 2);
+    initScrambler(el, text, duration);
+  });
+
+  const canvas = document.querySelector<HTMLElement>("[data-hero-canvas]");
+  if (canvas) {
+    createImageAberration(canvas, {
+      imageSrc: canvas.dataset.src ?? "/assets/images/cat_portrait.png",
+    });
+  }
+</script>

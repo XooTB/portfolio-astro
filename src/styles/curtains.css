@@ -5,7 +5,48 @@
   width: 100vw;
   height: 100vh;
   z-index: 30;
+  background-color: transparent;
+  animation: curtain-exit 0.5s ease-in-out 3.8s forwards;
+}
+
+.curtain-loader {
+  /* Horizontal drift only — keep Y locked so it doesn't jump up */
+  animation: curtain-loader-out 0.7s ease-in-out 1.25s forwards;
+}
+
+.curtain-block {
+  min-height: 100vh;
   background-color: white;
+  display: block;
+  position: fixed;
+  top: 0;
+  width: 5.1%;
+  animation: curtain-collapse 1s ease-in forwards;
+  animation-delay: calc(2s + var(--i) * 0.04s);
+}
+
+@keyframes curtain-collapse {
+  to {
+    width: 0%;
+  }
+}
+
+@keyframes curtain-loader-out {
+  from {
+    opacity: 1;
+    translate: -50% -50%;
+  }
+  to {
+    opacity: 0;
+    translate: calc(-50% - 24px) -50%;
+  }
+}
+
+@keyframes curtain-exit {
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
 }
 
 .block-1 {
@@ -70,6 +111,14 @@
 }
 
 @media screen and (max-width: 768px) {
+  .curtain-block {
+    width: 10.2%;
+  }
+
+  .curtain-block:nth-child(n + 11) {
+    display: none;
+  }
+
   .block-1 {
     right: 90%;
   }
@@ -108,5 +157,11 @@
 
   .block-10 {
     right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curtain {
+    display: none;
   }
 }

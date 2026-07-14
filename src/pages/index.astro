@@ -1,6 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Curtains from '@/components/sections/Curtains';
+import Curtains from '@/components/sections/Curtains.astro';
 import Hero from '@/components/sections/Hero.astro';
 import VerticalParallax from '@/components/sections/VerticalParallax.astro';
 import ScrollSection from '@/components/ScrollSection';
@@ -9,7 +9,7 @@ import LandingFooter from '@/components/sections/LandingFooter.astro';
 ---
 
 <Layout>
-  <Curtains client:load />
+  <Curtains />
   <div class="container-body">
     <div id="top-container" class="text-white">
       <Hero />

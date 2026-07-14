@@ -1,0 +1,43 @@
+---
+import "@/styles/curtains.css";
+
+const BLOCK_COUNT = 20;
+---
+
+<div data-curtains class="curtain relative">
+  <div
+    class="curtain-loader absolute top-[45%] left-[35%] lg:top-1/2 lg:left-1/2 -translate-x-1/2 -translate-y-1/2 text-black z-10 uppercase font-mono tracking-wide text-xl font-medium"
+  >
+    loading
+  </div>
+  <div class="overlay min-h-screen w-full">
+    {Array.from({ length: BLOCK_COUNT }, (_, i) => (
+      <div
+        class={`curtain-block block-${i + 1}`}
+        style={`--i: ${i}`}
+      />
+    ))}
+  </div>
+</div>
+
+<script>
+  const curtain = document.querySelector("[data-curtains]");
+  if (!curtain) {
+    // no-op
+  } else if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    curtain.remove();
+  } else {
+    curtain.addEventListener(
+      "animationend",
+      (event) => {
+        if (
+          event.target === curtain &&
+          event.animationName === "curtain-exit"
+        ) {
+          curtain.remove();
+        }
+      },
+      { once: true }
+    );
+  }
+</script>

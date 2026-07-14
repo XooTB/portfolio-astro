@@ -17,7 +17,7 @@ npm run preview   # Preview production build locally
 - **Tailwind CSS 3.x** — styling via `@astrojs/tailwind`
 - **Three.js / React Three Fiber** — WebGL hero image effect
 - **Motion** — animations (parallax, curtains, scroll effects)
-- **Lenis** — smooth scrolling
+- **Lenis** — smooth scrolling (vanilla script, not React)
 - **Radix UI** — accessible primitives (accordion, checkbox, dialog/sheet)
 - **Zustand** — state management (PocketBase store)
 - **PocketBase** — backend client (retained for future use, not actively called)
@@ -53,8 +53,8 @@ The entire page is **pre-rendered to static HTML at build time**. JavaScript onl
 Astro cannot pass hydrated React children between separate islands. The original Next.js nesting:
 
 ```
-SmoothScroll > HorizontalScroll > TextFill
-SmoothScroll > VerticalScroll
+HorizontalScroll > TextFill
+VerticalScroll
 ```
 
 is wrapped into a single React component `ScrollSection.tsx` that renders the full tree internally, used as `<ScrollSection client:visible />` in `index.astro`.
@@ -70,7 +70,7 @@ src/
 │   └── curtains.css                  # Curtain animation block positions
 ├── components/
 │   ├── NavBar.astro                  # Static — desktop links, embeds MobileNav island
-│   ├── ScrollSection.tsx             # Composite island (SmoothScroll + HorizontalScroll + TextFill + VerticalScroll)
+│   ├── ScrollSection.tsx             # Composite island (HorizontalScroll + TextFill + VerticalScroll)
 │   ├── HorizontalScroll.tsx          # Scroll-driven horizontal translate (desktop)
 │   ├── sections/
 │   │   ├── Hero.tsx                  # Scrambler + Zoop text + Three.js canvas
@@ -84,7 +84,6 @@ src/
 │   │   ├── Scrambler.tsx            # Text scrambling reveal effect
 │   │   └── Zoop.tsx                 # Hover character slide animation
 │   ├── three/
-│   │   ├── SmoothScroll.tsx         # Lenis smooth scroll wrapper
 │   │   ├── CanvasComponent.tsx      # R3F Canvas wrapper
 │   │   ├── ImageAbberation.tsx      # Chromatic aberration shader (configurable)
 │   │   └── ProfileImage.tsx         # Chromatic aberration shader (fixed params)

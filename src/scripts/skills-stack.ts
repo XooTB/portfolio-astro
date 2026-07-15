@@ -4,12 +4,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const DEFAULT_BASE_SCALE = 0.94;
-const Y_STEP = 20;
+const DEFAULT_Y_STEP = 20;
 
 function readLengthPx(
   stack: HTMLElement,
   cssVar: string,
-  cacheKey: "peekPx" | "navPx",
+  cacheKey: "peekPx" | "navPx" | "yStepPx",
   fallback: string
 ) {
   const cached = stack.dataset[cacheKey];
@@ -42,6 +42,7 @@ function readBaseScale(stack: HTMLElement) {
 function clearLengthCache(stack: HTMLElement) {
   delete stack.dataset.peekPx;
   delete stack.dataset.navPx;
+  delete stack.dataset.yStepPx;
   delete stack.dataset.baseScale;
 }
 
@@ -55,6 +56,12 @@ function setupStack(stack: HTMLElement) {
 
   const peek = readLengthPx(stack, "--skills-peek", "peekPx", "0.85rem");
   const nav = readLengthPx(stack, "--skills-nav", "navPx", "8.5rem");
+  const yStep = readLengthPx(
+    stack,
+    "--skills-y-step",
+    "yStepPx",
+    `${DEFAULT_Y_STEP}px`
+  );
   const baseScale = readBaseScale(stack);
   const step = 1 - baseScale;
 
@@ -84,7 +91,7 @@ function setupStack(stack: HTMLElement) {
       const depth = progress.reduce((sum, p) => sum + p, 0);
       gsap.set(inner, {
         scale: 1 - depth * step,
-        y: baseY - depth * Y_STEP,
+        y: baseY - depth * yStep,
       });
     };
 

@@ -1,0 +1,74 @@
+---
+import skills from '@/constants/skills';
+
+const cardBackgrounds = ['#fafafa', '#f3f3f1', '#ebebe8', '#e3e3df'];
+const lastIndex = skills.length - 1;
+---
+
+<section id="skills" class="w-full px-4 sm:px-6 lg:px-12 py-20 lg:py-28">
+  <h2 class="text-3xl sm:text-5xl lg:text-7xl font-mono tracking-tighter text-white mb-10 lg:mb-14">
+    What I'm good at
+  </h2>
+
+  <div
+    class="skills-stack relative"
+    data-skills-stack
+    style="--skills-nav: 8.5rem; --skills-peek: 0.85rem; --skills-space: 14svh; --skills-gap: 24svh; --skills-hold: 100svh; --skills-base-scale: 0.94;"
+  >
+    {
+      skills.map((skill, index) => (
+        <article
+          class="skills-stack__card sticky top-[var(--skills-nav)] mb-0 rounded-[2rem] sm:rounded-[2.5rem] lg:rounded-[3rem]"
+          style={`
+            z-index: ${index + 1};
+            min-height: calc(100svh - var(--skills-nav) - ${lastIndex} * var(--skills-peek) - var(--skills-space));
+            margin-bottom: ${index === lastIndex ? '0' : 'var(--skills-gap)'};
+          `}
+          data-stack-card
+          data-stack-index={index}
+        >
+          <div
+            class="skills-stack__inner h-full min-h-[inherit] rounded-[inherit] px-6 py-10 sm:px-10 sm:py-14 lg:px-16 lg:py-20 flex flex-col gap-8 lg:gap-10 origin-top will-change-transform"
+            style={`background-color: ${cardBackgrounds[index % cardBackgrounds.length]}`}
+            data-stack-inner
+          >
+            <h3 class="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-[0.95] tracking-tight">
+              <span class="text-neutral-950 block">{skill.title[0]}</span>
+              <span class="text-neutral-400 block">{skill.title[1]}</span>
+            </h3>
+
+            <ul class="flex flex-wrap gap-2 sm:gap-2.5">
+              {skill.chips.map((chip) => (
+                <li class="rounded-full bg-black/[0.06] px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm text-neutral-600 font-sans">
+                  {chip}
+                </li>
+              ))}
+            </ul>
+
+            <div class="flex gap-3 sm:gap-4 max-w-2xl">
+              <span class="shrink-0 text-neutral-950 text-sm sm:text-base leading-none mt-1" aria-hidden="true">
+                ✦
+              </span>
+              <p class="text-neutral-700 text-sm sm:text-base lg:text-lg leading-relaxed font-sans">
+                {skill.description}
+              </p>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+    <!-- Keeps the stack sticky long enough for the last card to finish landing before the section leaves. -->
+    <div
+      class="pointer-events-none"
+      data-stack-hold
+      aria-hidden="true"
+      style="height: var(--skills-hold)"
+    />
+  </div>
+</section>
+
+<script>
+  import { initSkillsStack } from '@/scripts/skills-stack';
+
+  initSkillsStack();
+</script>

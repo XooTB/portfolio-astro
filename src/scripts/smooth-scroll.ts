@@ -1,5 +1,6 @@
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 let lenis: Lenis | null = null;
 
@@ -14,6 +15,9 @@ export function initSmoothScroll() {
     lerp: 0.1,
     autoRaf: true,
   });
+
+  // Keep GSAP ScrollTrigger in sync with Lenis' virtual scroll position.
+  lenis.on("scroll", ScrollTrigger.update);
 
   return lenis;
 }

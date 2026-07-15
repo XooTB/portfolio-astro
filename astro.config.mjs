@@ -61,7 +61,7 @@ export default defineConfig({
     },
   })],
   vite: {
-    ssr: { noExternal: ['three', 'lenis'] },
+    ssr: { noExternal: ['three', 'lenis', 'gsap'] },
     plugins: [tailwindcss()],
   },
 });

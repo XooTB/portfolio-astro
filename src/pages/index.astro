@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import Curtains from '@/components/sections/Curtains.astro';
 import Hero from '@/components/sections/Hero.astro';
 import VerticalParallax from '@/components/sections/VerticalParallax.astro';
-import ScrollSection from '@/components/ScrollSection';
+import Skills from '@/components/sections/Skills.astro';
 import Feed from '@/components/sections/Feed.astro';
 import LandingFooter from '@/components/sections/LandingFooter.astro';
 ---
@@ -14,7 +14,7 @@ import LandingFooter from '@/components/sections/LandingFooter.astro';
     <div id="top-container" class="text-white">
       <Hero />
       <VerticalParallax />
-      <ScrollSection client:visible />
+      <Skills />
       <Feed />
       <LandingFooter />
     </div>

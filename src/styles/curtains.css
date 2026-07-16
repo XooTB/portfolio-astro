@@ -1,3 +1,8 @@
+/* Hide before the deferred module script can remove the node */
+html[data-skip-curtains] [data-curtains] {
+  display: none !important;
+}
+
 .curtain {
   position: fixed;
   top: 0;

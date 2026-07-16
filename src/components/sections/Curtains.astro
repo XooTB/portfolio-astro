@@ -4,6 +4,28 @@ import "@/styles/curtains.css";
 const BLOCK_COUNT = 20;
 ---
 
+{/* Runs before paint so same-site navigations never flash the overlay */}
+<script is:inline>
+  (() => {
+    const nav = performance.getEntriesByType?.("navigation")?.[0];
+    const type = nav?.type ?? "navigate";
+
+    // Reloads always show curtains
+    if (type === "reload") return;
+
+    const ref = document.referrer;
+    if (!ref) return; // direct / cold load
+
+    try {
+      if (new URL(ref).origin === location.origin) {
+        document.documentElement.dataset.skipCurtains = "";
+      }
+    } catch {
+      // ignore malformed referrer
+    }
+  })();
+</script>
+
 <div data-curtains class="curtain relative">
   <div
     class="curtain-loader absolute top-[45%] left-[35%] lg:top-1/2 lg:left-1/2 -translate-x-1/2 -translate-y-1/2 text-black z-10 uppercase font-mono tracking-wide text-xl font-medium"
@@ -24,8 +46,12 @@ const BLOCK_COUNT = 20;
   const curtain = document.querySelector("[data-curtains]");
   if (!curtain) {
     // no-op
-  } else if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  } else if (
+    document.documentElement.dataset.skipCurtains !== undefined ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
     curtain.remove();
+    delete document.documentElement.dataset.skipCurtains;
   } else {
     curtain.addEventListener(
       "animationend",

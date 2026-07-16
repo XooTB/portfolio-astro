@@ -62,5 +62,10 @@ export default defineConfig({
   vite: {
     ssr: { noExternal: ['three', 'lenis', 'gsap'] },
     plugins: [tailwindcss()],
+    // Mermaid core is ~650KB and only loads on blog posts with diagrams.
+    // Three.js hero chunk is ~490KB (eager; deferred load left a blank canvas).
+    build: {
+      chunkSizeWarningLimit: 700,
+    },
   },
 });

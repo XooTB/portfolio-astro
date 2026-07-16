@@ -1,4 +1,18 @@
-import * as THREE from "three";
+import {
+  LinearSRGBColorSpace,
+  MathUtils,
+  Mesh,
+  NoColorSpace,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Raycaster,
+  Scene,
+  ShaderMaterial,
+  Texture,
+  TextureLoader,
+  Vector2,
+  WebGLRenderer,
+} from "three";
 
 export type ImageAberrationOptions = {
   imageSrc: string;
@@ -52,9 +66,9 @@ const fragmentShader = `
   }
 `;
 
-function getViewportSize(camera: THREE.PerspectiveCamera) {
+function getViewportSize(camera: PerspectiveCamera) {
   const distance = camera.position.z;
-  const height = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * distance;
+  const height = 2 * Math.tan(MathUtils.degToRad(camera.fov / 2)) * distance;
   const width = height * camera.aspect;
   return { width, height };
 }
@@ -70,14 +84,14 @@ export function createImageAberration(
     easeFactor: initialEaseFactor = 0.15,
   }: ImageAberrationOptions
 ): ImageAberrationHandle {
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+  const scene = new Scene();
+  const camera = new PerspectiveCamera(75, 1, 0.1, 1000);
   camera.position.z = 5;
 
   // Transparent clear so `.hero-canvas` CSS (`var(--color-bg)`) shows through.
   // Linear output: custom shader already samples display-ready PNG bytes.
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+  renderer.outputColorSpace = LinearSRGBColorSpace;
   renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.domElement.style.display = "block";
@@ -92,36 +106,99 @@ export function createImageAberration(
   let aberrationIntensity = 0;
 
   const uniforms = {
-    u_texture: { value: null as THREE.Texture | null },
-    u_mouse: { value: new THREE.Vector2(0.5, 0.5) },
-    u_prevMouse: { value: new THREE.Vector2(0.5, 0.5) },
+    u_texture: { value: null as Texture | null },
+    u_mouse: { value: new Vector2(0.5, 0.5) },
+    u_prevMouse: { value: new Vector2(0.5, 0.5) },
     u_aberrationIntensity: { value: 0.0 },
     u_gridSize: { value: gridSize },
     u_mouseInfluenceDistance: { value: mouseInfluenceDistance },
     u_mouseEffectStrength: { value: mouseEffectStrength },
   };
 
-  const material = new THREE.ShaderMaterial({
+  const material = new ShaderMaterial({
     uniforms,
     vertexShader,
     fragmentShader,
   });
 
   const { width, height } = getViewportSize(camera);
-  const geometry = new THREE.PlaneGeometry(width, height);
-  const mesh = new THREE.Mesh(geometry, material);
+  const geometry = new PlaneGeometry(width, height);
+  const mesh = new Mesh(geometry, material);
   scene.add(mesh);
 
-  const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
+  const raycaster = new Raycaster();
+  const pointer = new Vector2();
 
-  const textureLoader = new THREE.TextureLoader();
-  textureLoader.load(imageSrc, (texture) => {
+  let frameId = 0;
+  let destroyed = false;
+  let looping = false;
+  let inView = true;
+  let pageVisible = document.visibilityState === "visible";
+
+  function isSettled() {
+    return (
+      aberrationIntensity <= 0 &&
+      Math.abs(targetMousePosition.x - mousePosition.x) < 0.0001 &&
+      Math.abs(targetMousePosition.y - mousePosition.y) < 0.0001
+    );
+  }
+
+  function renderFrame() {
+    uniforms.u_mouse.value.set(mousePosition.x, 1.0 - mousePosition.y);
+    uniforms.u_prevMouse.value.set(prevPosition.x, 1.0 - prevPosition.y);
+    uniforms.u_aberrationIntensity.value = aberrationIntensity;
+    renderer.render(scene, camera);
+  }
+
+  function stopLoop() {
+    looping = false;
+    if (frameId) {
+      cancelAnimationFrame(frameId);
+      frameId = 0;
+    }
+  }
+
+  function startLoop() {
+    if (destroyed || looping || !inView || !pageVisible) return;
+    looping = true;
+    frameId = requestAnimationFrame(tick);
+  }
+
+  function tick() {
+    if (destroyed || !inView || !pageVisible) {
+      looping = false;
+      frameId = 0;
+      return;
+    }
+
+    mousePosition.x +=
+      (targetMousePosition.x - mousePosition.x) * easeFactor;
+    mousePosition.y +=
+      (targetMousePosition.y - mousePosition.y) * easeFactor;
+
+    aberrationIntensity = Math.max(0.0, aberrationIntensity - 0.05);
+    renderFrame();
+
+    if (isSettled()) {
+      looping = false;
+      frameId = 0;
+      return;
+    }
+
+    frameId = requestAnimationFrame(tick);
+  }
+
+  new TextureLoader().load(imageSrc, (texture) => {
+    if (destroyed) {
+      texture.dispose();
+      return;
+    }
     // Keep texture bytes as-is — custom ShaderMaterial does not decode
     // sRGB, and output encoding would otherwise crush #2b2b2b toward black.
-    texture.colorSpace = THREE.NoColorSpace;
+    texture.colorSpace = NoColorSpace;
     uniforms.u_texture.value = texture;
     material.needsUpdate = true;
+    renderFrame();
   });
 
   function resize() {
@@ -135,10 +212,11 @@ export function createImageAberration(
 
     const viewport = getViewportSize(camera);
     mesh.geometry.dispose();
-    mesh.geometry = new THREE.PlaneGeometry(viewport.width, viewport.height);
+    mesh.geometry = new PlaneGeometry(viewport.width, viewport.height);
+    renderFrame();
   }
 
-  function getUvFromEvent(event: PointerEvent): THREE.Vector2 | null {
+  function getUvFromEvent(event: PointerEvent): Vector2 | null {
     const rect = renderer.domElement.getBoundingClientRect();
     pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -159,6 +237,7 @@ export function createImageAberration(
     targetMousePosition.x = uv.x;
     targetMousePosition.y = 1.0 - uv.y;
     aberrationIntensity = aberrationStrength;
+    startLoop();
   }
 
   function onPointerEnter(event: PointerEvent) {
@@ -172,50 +251,57 @@ export function createImageAberration(
     mousePosition.y = y;
     targetMousePosition.x = x;
     targetMousePosition.y = y;
+    startLoop();
   }
 
   function onPointerLeave() {
     easeFactor = 0.09;
     targetMousePosition.x = prevPosition.x;
     targetMousePosition.y = prevPosition.y;
+    startLoop();
   }
 
-  let frameId = 0;
-  let destroyed = false;
-
-  function tick() {
-    if (destroyed) return;
-
-    mousePosition.x +=
-      (targetMousePosition.x - mousePosition.x) * easeFactor;
-    mousePosition.y +=
-      (targetMousePosition.y - mousePosition.y) * easeFactor;
-
-    uniforms.u_mouse.value.set(mousePosition.x, 1.0 - mousePosition.y);
-    uniforms.u_prevMouse.value.set(prevPosition.x, 1.0 - prevPosition.y);
-
-    aberrationIntensity = Math.max(0.0, aberrationIntensity - 0.05);
-    uniforms.u_aberrationIntensity.value = aberrationIntensity;
-
-    renderer.render(scene, camera);
-    frameId = requestAnimationFrame(tick);
+  function onVisibilityChange() {
+    pageVisible = document.visibilityState === "visible";
+    if (pageVisible) {
+      if (!isSettled()) startLoop();
+      else renderFrame();
+    } else {
+      stopLoop();
+    }
   }
 
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(container);
 
+  const intersectionObserver = new IntersectionObserver(
+    ([entry]) => {
+      inView = entry.isIntersecting;
+      if (inView) {
+        if (!isSettled()) startLoop();
+        else renderFrame();
+      } else {
+        stopLoop();
+      }
+    },
+    { rootMargin: "10% 0px" }
+  );
+  intersectionObserver.observe(container);
+
   renderer.domElement.addEventListener("pointermove", onPointerMove);
   renderer.domElement.addEventListener("pointerenter", onPointerEnter);
   renderer.domElement.addEventListener("pointerleave", onPointerLeave);
+  document.addEventListener("visibilitychange", onVisibilityChange);
 
   resize();
-  tick();
 
   return {
     destroy() {
       destroyed = true;
-      cancelAnimationFrame(frameId);
+      stopLoop();
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       renderer.domElement.removeEventListener("pointermove", onPointerMove);
       renderer.domElement.removeEventListener("pointerenter", onPointerEnter);
       renderer.domElement.removeEventListener("pointerleave", onPointerLeave);

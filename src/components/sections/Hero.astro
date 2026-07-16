@@ -86,7 +86,11 @@ const zoopChars = (text: string) => text.split("");
   });
 
   const canvas = document.querySelector<HTMLElement>("[data-hero-canvas]");
-  if (canvas) {
+  if (
+    canvas &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    // Init immediately so WebGL is ready behind the curtains.
     createImageAberration(canvas, {
       imageSrc: canvas.dataset.src ?? "/assets/images/cat_portrait.png",
     });

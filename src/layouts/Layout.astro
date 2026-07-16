@@ -8,9 +8,15 @@ interface Props {
   title?: string;
   description?: string;
   openGraph?: OpenGraphMeta;
+  preloadImages?: { href: string; type?: string }[];
 }
 
-const { title = 'Samiul A.', description = 'Creative Designer', openGraph } = Astro.props;
+const {
+  title = 'Samiul A.',
+  description = 'Creative Designer',
+  openGraph,
+  preloadImages = [],
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -50,6 +56,17 @@ const { title = 'Samiul A.', description = 'Creative Designer', openGraph } = As
       type="font/woff2"
       crossorigin
     />
+    {
+      preloadImages.map((image) => (
+        <link
+          rel="preload"
+          as="image"
+          href={image.href}
+          type={image.type}
+          fetchpriority="high"
+        />
+      ))
+    }
   </head>
   <body>
     <NavBar />

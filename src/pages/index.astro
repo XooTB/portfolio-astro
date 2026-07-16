@@ -8,7 +8,11 @@ import Feed from '@/components/sections/Feed.astro';
 import LandingFooter from '@/components/sections/LandingFooter.astro';
 ---
 
-<Layout>
+<Layout
+  preloadImages={[
+    { href: '/assets/images/cat_portrait.webp', type: 'image/webp' },
+  ]}
+>
   <Curtains />
   <div class="container-body">
     <div id="top-container" class="text-white">

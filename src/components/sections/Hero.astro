@@ -51,7 +51,12 @@ const zoopChars = (text: string) => text.split("");
   </div>
 
   <div class="hero-canvas-container">
-    <div class="hero-canvas" data-hero-canvas data-src="/assets/images/cat_portrait.png"></div>
+    <div
+      class="hero-canvas"
+      data-hero-canvas
+      data-src-webp="/assets/images/cat_portrait.webp"
+      data-src="/assets/images/cat_portrait.png"
+    ></div>
   </div>
 </div>
 
@@ -90,9 +95,25 @@ const zoopChars = (text: string) => text.split("");
     canvas &&
     !window.matchMedia("(prefers-reduced-motion: reduce)").matches
   ) {
+    const supportsWebP = (() => {
+      try {
+        return (
+          document
+            .createElement("canvas")
+            .toDataURL("image/webp")
+            .startsWith("data:image/webp")
+        );
+      } catch {
+        return false;
+      }
+    })();
+
+    const imageSrc =
+      (supportsWebP && canvas.dataset.srcWebp) ||
+      canvas.dataset.src ||
+      "/assets/images/cat_portrait.png";
+
     // Init immediately so WebGL is ready behind the curtains.
-    createImageAberration(canvas, {
-      imageSrc: canvas.dataset.src ?? "/assets/images/cat_portrait.png",
-    });
+    createImageAberration(canvas, { imageSrc });
   }
 </script>

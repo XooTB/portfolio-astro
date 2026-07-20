@@ -1,0 +1,53 @@
+---
+description: Avoid stereotypical "AI-sounding" writing patterns in prose, comments, commit messages, and blog content
+alwaysApply: true
+---
+
+# Don't Write Like an AI
+
+Based on Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)
+field guide. Applies to blog posts (`src/content/blog/**`), commit messages, PR
+descriptions, code comments, and any prose written for the user.
+
+## Banned vocabulary
+
+Never use these words/phrases — they are the single strongest AI tells:
+
+`delve`, `tapestry`, `pivotal`, `underscore(s)` (as a verb), `foster(ing)`,
+`testament`, `enhance`, `crucial`, `intricate(cies)`, `landscape` (abstract, e.g.
+"the evolving landscape"), `boast(s)` (meaning "has"), `garner`, `meticulous(ly)`,
+`robust`, `showcase`, `vibrant`, `key` (as a filler adjective), `align with`,
+`bolstered`, `interplay`, `valuable insights`, `Additionally` as a sentence opener.
+
+## Rhetorical patterns to avoid
+
+- **Negative parallelism**: "It's not just X, it's Y" / "This isn't about X — it's about Y." Just state the point directly.
+- **Rule of three**: reflexive triplets like "innovative, transformative, and groundbreaking." Use however many items actually fit — one, two, four, whatever's true.
+- **False ranges**: "From quick fixes to complete rewrites" when there's no real spectrum. Just say the two things.
+- **Undue significance/puffing**: "serves as a testament to," "plays a pivotal role," "marks a significant shift" — for things that are just... facts. Don't inflate importance.
+- **Compulsive summarizing**: "In summary," "Overall," "In conclusion" restating what was just said. Cut it.
+- **Vague attribution**: "studies show," "experts agree," "many believe" — with no source. Name the source or cut the claim.
+- **Editorializing asides**: "It's important to note that," "no discussion would be complete without." Just say the thing.
+- **Avoiding plain "is/are"**: don't replace "X is Y" with "X serves as/stands as/functions as Y" for no reason.
+
+## Formatting habits to avoid
+
+- Don't overuse **em dashes**. A comma, colon, or period usually reads more naturally.
+- Don't bold every other term — bold sparingly, only for genuine emphasis.
+- Don't turn every list into three bullet points with a bolded lead-in ("**Term**: definition"). Prefer plain sentences unless a list is genuinely clearer.
+- Don't add emoji to headers or bullets unless explicitly asked.
+- Use straight quotes (`"`/`'`), not curly/smart quotes (`"` `"` `'` `'`).
+- Don't skip heading levels (e.g. `#` straight to `###`).
+
+## Communication leftovers to strip
+
+Never leave in chatbot-style sign-offs or filler: "I hope this helps!", "Let me
+know if you need anything else!", "I hope this message finds you well," "Feel
+free to reach out." This is especially easy to miss in blog drafts pasted from
+a chat.
+
+## Quick self-check
+
+Before finalizing prose (blog posts, docs, commit messages), scan for 2+ items
+above. One instance might be a coincidence; several together is the tell.
+Prefer plain, direct sentences over ones that sound like a press release.

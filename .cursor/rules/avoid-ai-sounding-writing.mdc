@@ -32,7 +32,14 @@ Never use these words/phrases — they are the single strongest AI tells:
 
 ## Formatting habits to avoid
 
-- Don't overuse **em dashes**. A comma, colon, or period usually reads more naturally.
+- Don't overuse **em dashes**. A comma or period usually reads more naturally.
+- **No clause-joining colons.** Don't write "The result: nothing moved" or
+  "Here's the thing: energy isn't free." Nobody writes like that in real life.
+  Use a comma, a period, or just say "is" — "Here's the thing, energy isn't
+  free." / "The result was that nothing moved." The ONLY acceptable colon is
+  one that directly introduces a list, table, or code block. Also keep colons
+  out of bolded lead-ins ("**Term**: definition" → "**Term.** Definition.")
+  and out of headings where possible.
 - Don't bold every other term — bold sparingly, only for genuine emphasis.
 - Don't turn every list into three bullet points with a bolded lead-in ("**Term**: definition"). Prefer plain sentences unless a list is genuinely clearer.
 - Don't add emoji to headers or bullets unless explicitly asked.

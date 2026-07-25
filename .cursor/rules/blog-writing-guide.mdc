@@ -1,0 +1,139 @@
+---
+description: Writing guide for blog posts — tone, structure, and explainer style modeled on the published posts
+globs: src/content/blog/**
+alwaysApply: false
+---
+
+# Blog Writing Guide
+
+How to write posts for this blog. The reference post is
+`solana-confirmed-vs-finalized-crediting-deposits/index.md` — when in doubt,
+reread it and match it. Also follow `avoid-ai-sounding-writing.mdc`.
+
+## Who is writing, and to whom
+
+The author is a practitioner who built the thing and made real decisions with
+money on the line. Not a journalist summarizing docs, not a teacher writing a
+textbook. The reader is a fellow builder, addressed as "you", who is smart but
+hasn't hit this specific problem yet.
+
+Every post is grounded in a real project ("I was recently building a crypto
+payment handler...") and a real decision that had to be made. The post exists
+because the decision was hard and the reasoning transfers.
+
+## Post skeleton
+
+Posts follow this shape. Sections separated by `---` horizontal rules.
+
+1. **The hook.** First paragraph drops the reader into a concrete moment where
+   something confusing or wrong happens. No preamble, no "in this post". Good
+   hooks from the corpus: "You send 500 USDT. Your wallet shows a transaction
+   hash. Your colleague checks their wallet... nothing there." / "A user opens
+   a support ticket: 'I withdrew USDT and it never arrived.'" The tension lands
+   within three sentences.
+2. **The personal stake.** A short paragraph establishing what the author was
+   building, what decision came up, and what they chose. State the choice
+   up front — the post is the reasoning, not a mystery novel.
+3. **Mechanism sections.** Two to four `##` sections that teach how the system
+   actually works, bottom-up, before any opinion is offered. The reader should
+   be able to re-derive the conclusion themselves by the time they reach it.
+4. **The judgment section.** Where the opinion lives ("So why not credit on
+   confirmed?"). Steelman the alternative first, genuinely — "confirmed is very
+   good... plenty of serious platforms credit deposits at confirmed. That was
+   the real alternative on the table." Then explain what tipped the decision.
+5. **"What this looked like in practice."** Concrete operational rules as short
+   paragraphs, each opening with a bolded imperative sentence ending in a
+   period ("**Poll the root, not the transaction.**"), followed by two to four
+   plain sentences of why.
+6. **Quick reference.** Skimmable bold mini-headers with short bullet lists.
+   This is the section people come back to; keep it terse and numeric.
+7. **The zoom-out.** Closing paragraph(s) that generalize the lesson past the
+   specific tech ("The pattern generalizes past Solana. Every chain gives you a
+   spectrum between..."). Never a summary of what was just said — a
+   transferable principle. Optionally end with a single `>` blockquote holding
+   the one-line takeaway.
+
+Not every post needs every section, but hook, mechanism-before-opinion, and
+zoom-out are non-negotiable.
+
+## Explainer style
+
+- **Teach the why behind magic numbers.** Never let a constant sit unexplained.
+  The reference post doesn't say "finalized is 32 blocks"; it derives why 32
+  (lockout doubling, 2^32 slots, ~50 years at 400ms). Same for 2,039,280
+  lamports or 150-block expiry. If you can't derive it, show the formula.
+- **Anchor to what the reader already knows.** Introduce the unfamiliar by
+  contrast with the familiar: "If you've built deposit detection on Ethereum,
+  you know the drill..." then pivot to how this chain differs.
+- **Concrete numbers, always.** Not "fast" but "~1 to 2 seconds". Not
+  "expensive" but "~12.4 TRX, about $1.61". Not "unlikely" but "1 in 4.3
+  billion". Include the units and the price assumptions.
+- **Name the asymmetry or trade-off explicitly.** The best paragraphs identify
+  the exact imbalance driving the problem ("bandwidth gets a daily freebie,
+  energy doesn't" / "our credit was a settlement, not a display update").
+- **Coin one memorable principle per post.** A sentence the reader can carry
+  out of the post and apply elsewhere: "Match the finality of your action to
+  the finality of its trigger." One per post, placed in the judgment section.
+- **Acknowledge the tail.** When arguing for caution, don't pretend the common
+  case is dangerous. Say plainly that the normal case is safe, then reason
+  about the weird scenarios ("The threat model isn't X during normal
+  operation. It's the tail.").
+
+## Sentence-level voice
+
+- Mix long explanatory sentences with short punchy ones. A dense mechanism
+  paragraph earns a payoff line like "So detection is easy." or "That
+  creation is where the SOL goes."
+- Deliberate fragments are allowed for emphasis, sparingly: "Not 'probably
+  won't'. Can't."
+- Dry asides are part of the voice: "The mechanics ended up pleasantly boring,
+  which is the goal." / "congratulations, that's a structurally valid Solana
+  address." One or two per post, not per section.
+- Rhetorical questions may pivot a section ("The transaction is in a block,
+  sure, but which blocks do you trust?") — at most a couple per post.
+- State positions without hedging. "This is the right design." not "This is
+  arguably perhaps a reasonable design choice."
+- Where an AI would write "The result: nothing moved", write it as a person
+  would — "The result was that nothing moved" or use a comma. See the colon
+  rule in `avoid-ai-sounding-writing.mdc`.
+
+## Formatting conventions
+
+- `##` headings in sentence case, plain-spoken, sometimes with a hook of their
+  own ("There is no pending queue to watch", "Energy: the one that bites you").
+  Question headings are fine for the judgment section.
+- Mermaid `flowchart` for processes and state transitions, `xychart-beta` for
+  anything with numbers worth comparing. Put a one-line italic caption
+  directly under each chart explaining what to look at.
+- Plain fenced code blocks (no language) for back-of-envelope arithmetic,
+  laid out vertically with aligned values.
+- Markdown tables only for genuinely enumerable comparisons (the side-by-side
+  chain table). Never as a substitute for prose.
+- Bold for a term's first load-bearing definition (**Gulf Stream**, **rent
+  deposit**) and for the imperative openers in the practice section. Nowhere
+  else.
+- Link primary sources inline (EIPs, TIPs, official docs) at first mention.
+
+## Frontmatter
+
+```yaml
+title: # A "why" claim or question with the surprise built in:
+       # "Why we waited 32 blocks to credit Solana deposits"
+       # "Why your TRON USDT transfer silently failed"
+description: # 1-2 sentences, states the mechanism AND the decision/lesson
+ogTitle: # Shorter variant of title, same energy
+ogDescription: # Different angle than description, not a copy
+date: YYYY-MM-DD
+author: Samiul
+topics: [Chain, Concept, Concept] # 4-6, PascalCase-ish, no spaces
+draft: true # until explicitly published
+```
+
+## Self-check before finishing a draft
+
+- Does the first paragraph drop into a concrete moment, or does it throat-clear?
+- Is every constant either derived or sourced?
+- Did you steelman the alternative before disagreeing with it?
+- Is there exactly one quotable principle?
+- Does the ending generalize instead of summarize?
+- Run the `avoid-ai-sounding-writing.mdc` scan, including the colon rule.

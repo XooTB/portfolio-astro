@@ -140,15 +140,24 @@ PUBLIC_POCKETBASE_URL=   # Astro uses PUBLIC_ prefix for client-exposed vars
 
 Set in `.env` at project root. Accessed via `import.meta.env.PUBLIC_POCKETBASE_URL`.
 
+## Blog Mermaid diagrams
+
+Mermaid code blocks in `src/content/blog/**` are rendered to **inline SVG at build time** via `beautiful-mermaid` (rehype plugin at `src/lib/rehype-beautiful-mermaid.ts`). No client Mermaid JS and no Chromium.
+
+- Markdown uses `@astrojs/markdown-remark` `unified()` processor so rehype plugins work (Astro 7 defaults to Sätteri, which does not run rehype).
+- Supported types (beautiful-mermaid): flowchart, state, sequence, class, ER, xychart. Unsupported types fail the build.
+- Theming: SVGs use CSS vars `--mermaid-bg` / `--mermaid-fg` (defined in `globals.css`). Override those for light/dark later — no dual SVGs or rebuild required.
+- Output wrapper: `<figure class="blog-diagram" data-diagram="...">`.
+
 ## Vite Config Notes
 
 In `astro.config.mjs`:
 ```js
 vite: {
-  ssr: { noExternal: ['three', 'lenis'] }
+  ssr: { noExternal: ['three', 'lenis', 'gsap', 'beautiful-mermaid'] }
 }
 ```
-Required because `three` and `lenis` need to be bundled during SSR to avoid Node ESM resolution issues.
+Required so those packages bundle correctly during SSR / the markdown build.
 
 ## Key Patterns
 

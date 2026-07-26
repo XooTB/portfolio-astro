@@ -269,31 +269,20 @@ body {
   }
 }
 
-/* Mermaid xychart — dotted plot surface, open axes, blog spacing */
-.prose pre.mermaid {
-  margin-block: 2rem !important;
-  padding: 1.5rem 0.5rem !important;
-  background-color: #2e2e2e !important;
-  background-size: 18px 18px !important;
-  border: none !important;
-  border-radius: 0 !important;
+/* Build-time diagrams (beautiful-mermaid). Recolor via these tokens for light/dark. */
+:root {
+  --mermaid-bg: transparent;
+  --mermaid-fg: #fafafa;
+}
+
+.prose .blog-diagram {
+  margin-block: 2rem;
   overflow-x: auto;
 }
 
-.prose pre.mermaid svg[aria-roledescription="xychart"] {
+.prose .blog-diagram svg {
   display: block;
+  max-width: 100%;
+  height: auto;
   margin-inline: auto;
-  background-color: transparent !important;
-  background-image: radial-gradient(circle, #404040 1px, transparent 1px) !important;
-  background-size: 18px 18px !important;
-}
-
-.prose pre.mermaid svg[aria-roledescription="xychart"] rect.background {
-  fill: transparent;
-}
-
-.prose pre.mermaid svg[aria-roledescription="xychart"] g.axis-line path,
-.prose pre.mermaid svg[aria-roledescription="xychart"] g.axisl-line path,
-.prose pre.mermaid svg[aria-roledescription="xychart"] g.ticks path {
-  display: none;
 }

@@ -6,7 +6,7 @@ ogDescription: "Optional checksum, mandatory checksum, no checksum. How three ad
 date: 2026-07-20
 author: Samiul
 topics: [Ethereum, TRON, Solana, Addresses, Checksums, Payments]
-draft: false
+draft: true 
 ---
 
 A user opens a support ticket: "I withdrew USDT and it never arrived." You pull up the withdrawal. The address passed validation. The transaction confirmed. The explorer shows the funds sitting exactly where you sent them. The problem is that nobody controls that address, and nobody ever will.

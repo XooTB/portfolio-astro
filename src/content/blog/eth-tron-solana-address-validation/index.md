@@ -3,17 +3,17 @@ title: "What a 'valid address' actually means on Ethereum, TRON, and Solana"
 description: "One chain hides its checksum in the casing, one bakes it into the encoding, and one skips it entirely. Lessons from validating deposit addresses on a payment platform that supported all three."
 ogTitle: "What 'valid address' means on ETH, TRON, and Solana"
 ogDescription: "Optional checksum, mandatory checksum, no checksum. How three address formats fail differently when real money flows through your validator."
-date: 2026-07-20
+date: 2026-08-05
 author: Samiul
 topics: [Ethereum, TRON, Solana, Addresses, Checksums, Payments]
-draft: true
+draft: false
 ---
 
 A user opens a support ticket: "I withdrew USDT and it never arrived." You pull up the withdrawal. The address passed validation. The transaction confirmed. The explorer shows the funds sitting exactly where you sent them. The problem is that nobody controls that address, and nobody ever will.
 
-I spent a good while working on a crypto payment platform that handled deposits and withdrawals across Ethereum, TRON, and Solana. Address validation sounds like the boring part of that job. It's a regex, right? Ship it and move on to the interesting stuff.
+I spent a good while working Web3 and Crypto. Many of them being a crypto payment platform that handled deposits and withdrawals across Ethereum, TRON, and Solana. Address validation sounds like the boring part of that job. It's only a regex, right? Ship it and move on to the more 'interesting' stuff.
 
-It's not a regex. Or rather, if it is a regex, you've already lost money and you just haven't noticed yet. These three chains have wildly different opinions about what an address even *is*, and the differences are exactly the kind that don't show up in testing. Everything works fine until the one user who pastes a corrupted address, and then it works fine for them too. That's the problem.
+Well, I'm afraid I got some bad news for you. It's not a regex. Or rather, if it is a regex, you've already lost money and you just haven't noticed it yet. These three chains have wildly different opinions about what even *is* an address, and the differences are exactly the kind that don't show up in testing. Everything works fine until the one user who pastes a corrupted address, and then it works fine for them too. That exactly *is* the problem.
 
 Let me walk through each chain the way I wish someone had walked me through them.
 
@@ -21,26 +21,26 @@ Let me walk through each chain the way I wish someone had walked me through them
 
 ## Ethereum: the checksum is optional, which means it's optional
 
-An Ethereum address is 20 bytes, hex-encoded, with a `0x` prefix. Forty hex characters. Any 40 hex characters. There is no checksum baked into the format, no magic prefix, no validity rule beyond "is this hex". If a user fat-fingers one character, the result is still a perfectly valid Ethereum address. It just belongs to nobody.
+An Ethereum address is 20 bytes, hex-encoded, with a `0x` prefix. Forty hex characters. Any 40 hex characters. There is no checksum baked into the format, no magic prefix, no validity rule beyond "is this hex". If a user fat-fingers one character, the result is still a perfectly valid Ethereum address. It just belongs to nobody. (Although nobody really types in wallet addresses these days, they just copy/paste it.)
 
-The ecosystem's answer to this is [EIP-55](https://eips.ethereum.org/EIPS/eip-55), and it's genuinely clever. It hides a checksum in the *capitalization* of the letters. You take the lowercase address, hash it with keccak256, and for each letter in the address, you uppercase it if the corresponding nibble of the hash is 8 or higher. The result looks like this:
+The ecosystem's answer to this is [EIP-55](https://eips.ethereum.org/EIPS/eip-55), and it's a genuinely clever mechanism. It hides a checksum in the *capitalization* of the letters. You take the lowercase address, hash it with [**keccak256**](https://rugdoc.io/wiki/docs/introduction-to-ethereums-keccak-256-algorithm/), and for each letter in the address, you uppercase it if the corresponding nibble of the hash is 8 or higher. The result looks something like this:
 
 ```
 0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed
 ```
 
-That mixed casing isn't random. It encodes roughly 15 bits of checksum on a typical address, which catches a single-character typo with about 99.99% probability. No format change, fully backward compatible, and any tool that doesn't know about EIP-55 just sees a normal address.
+That mixed casing isn't random. It encodes roughly 15 bits of checksum on a typical address, which catches a single-character typo with about 99.99% probability. Without any format change, fully backward compatible, and any tool that doesn't know about EIP-55 just sees a normal address.
 
 Here's the catch, and this is the part that matters if you're accepting addresses from users: **an all-lowercase address is also valid.** It has to be, for backward compatibility. So the standard validation logic goes:
 
 1. Mixed case? Verify the EIP-55 checksum, reject on mismatch.
 2. All lowercase (or all uppercase)? Accept it. There's no checksum to check.
 
-Which means the checksum only protects users whose wallet preserved the casing all the way to your input field. In practice, addresses get lowercased constantly. Databases with case-insensitive collation, some ENS tooling, users typing addresses by hand, a script somewhere calling `.toLowerCase()` for comparison and accidentally persisting the result. Every one of those strips the checksum, and your validator will happily wave through whatever comes out the other side.
+Which means the checksum only protects users whose wallet preserved the casing all the way to your input field. In practice, addresses get lowercased constantly. Databases with case-insensitive collation, some ENS tooling, users typing addresses by hand, a script 200 stack traces deep somewhere calling `.toLowerCase()` for comparison and accidentally persisting the result. Every one of those strips the checksum, and your validator will happily wave through whatever comes out the other side.
 
 On our platform we saw this from the other direction too: we *generated* deposit addresses, and early on we stored them lowercased. Fine for lookups. Then those addresses got displayed to users, copied into external wallets, and every safety net EIP-55 could have provided was already gone before the user even saw the address. We fixed it by checksumming at the display boundary, always. If an address leaves your system, it leaves in EIP-55 form. It costs you one keccak call.
 
-One more thing that trips people up is that format validity says nothing about the *chain*. `0x` plus 40 hex characters is a valid address on Ethereum, BSC, Polygon, Arbitrum, and every other EVM chain. USDT exists on most of them. When a user picks the wrong network at withdrawal, your address validator cannot save them, because the address genuinely is valid on both chains. That's a UX problem you solve with confirmation screens and network warnings, not with validation logic.
+One more thing that trips people up is that format validity says nothing about the *chain* itself. `0x` plus 40 hex characters is a valid address on Ethereum, BSC, Polygon, Arbitrum, and every other EVM chain. USDT exists on most of them. When a user picks the wrong network at withdrawal, your address validator cannot save them, because the address genuinely is valid on both chains. That's a UX problem you solve with confirmation screens and network warnings, not with validation logic.
 
 ---
 
@@ -56,7 +56,7 @@ Thirty-four characters, always starts with `T`, Base58 alphabet. But peel back t
 
 The important difference is Base58Check. That "Check" suffix is doing real work. The last 4 bytes of the decoded address are a checksum, the first 4 bytes of a double SHA-256 over the payload. It's not optional and it's not cosmetic. Corrupt any character and the checksum fails on decode. The odds of a random mangled string passing are about 1 in 4.3 billion.
 
-This is Bitcoin's address scheme, inherited wholesale, and honestly it's the right design. The checksum survives case changes (there's only one valid casing per address, since Base58 is case sensitive by nature), survives copy-paste through any system, and can't be silently stripped the way EIP-55 can. Of the three chains here, TRON is the only one where "the address decoded successfully" actually means something strong.
+This is Bitcoin's address scheme, inherited wholesale, and honestly it's the right design. The checksum survives case changes (there's only one valid casing per address, since Base58 is case sensitive by nature), It survives copy-paste through any system, and can't be silently stripped the way EIP-55 can. Of the three chains here, TRON is the only one where "the address decoded successfully" actually means something strong.
 
 So TRON validation was the easy one for us? Mostly, yes. The footguns were in the edges.
 
@@ -67,9 +67,9 @@ So TRON validation was the easy one for us? Mostly, yes. The footguns were in th
 
 ## Solana: there is no checksum, and that's not a typo
 
-Here's where it gets fun. A Solana address is a 32-byte ed25519 public key, Base58 encoded. Note what's missing from that sentence: any mention of a checksum. Base58, not Base58Check. The encoding is pure. Decode the string, and if you get 32 bytes, congratulations, that's a structurally valid Solana address.
+Here's where it gets fun. A Solana address is a 32-byte ed25519 public key, Base58 encoded. Take note of what's missing from that sentence: any mention of a checksum. Base58, not Base58Check. The encoding is pure. Decode the string, and if you get 32 bytes, congratulations, that's a structurally valid Solana address.
 
-If you're coming from Bitcoin or TRON, this feels like someone forgot a step. But it's a deliberate trade. Base58 has no visually ambiguous characters (no `0`/`O`, no `I`/`l`), the addresses are long, and Solana's position is essentially that humans shouldn't be transcribing addresses by hand anyway. Copy-paste doesn't introduce single-character errors. Which is true, right up until it isn't: OCR from a screenshot, an address relayed over a phone call, a chat app that mangles a string, malware that swaps clipboard contents. When one of those happens on Ethereum, EIP-55 might catch it. On TRON, Base58Check almost certainly catches it. On Solana, if the corrupted string still decodes to 32 bytes, your validator says yes.
+If you're coming from Bitcoin or TRON, this feels like someone forgot a step. But it's a deliberate trade. Base58 has no visually ambiguous characters (no `0`/`O`, no `I`/`l`), the addresses are long, and Solana's position is essentially that humans shouldn't be transcribing addresses by hand anyway (I agree BTW). Copy-paste doesn't introduce single-character errors. Which is true, right up until it isn't: OCR from a screenshot, an address relayed over a phone call, a chat app that mangles a string, malware that swaps clipboard contents. When one of those happens on Ethereum, EIP-55 might catch it. On TRON, Base58Check almost certainly catches it. On Solana, if the corrupted string still decodes to 32 bytes, and your validator says yes.
 
 There's a length wrinkle too. People love to write `^[1-9A-HJ-NP-Za-km-z]{32,44}$` and call it done. Base58 doesn't map cleanly to fixed lengths: 32 bytes usually encodes to 43 or 44 characters, but leading zero bytes in the key shorten the string, so the valid range really is that wide. Which also means length can't disambiguate chains for you. A TRON address is 34 characters of Base58; a Solana key with enough leading zeros can be too, and yes, it can even start with `T`. It's rare, but "rare" in a payment system means "will happen, at the worst time, to a confused user." Chain detection by string shape is a heuristic, not a guarantee. If your product infers the network from the pasted address, have a tiebreak plan.
 
